@@ -1,0 +1,11 @@
+{
+  "name": "roon-api-browser-frontend",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Pfeifer",
+  "license": "MIT",
+  "description": "Use the Roon API to browse your Roon core"
+}
