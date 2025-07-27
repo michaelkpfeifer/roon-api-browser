@@ -1,16 +1,29 @@
 import http from 'http';
 
+import cors from 'cors';
+
 import express from 'express';
 import RoonApi from 'node-roon-api';
 import RoonApiBrowse from 'node-roon-api-browse';
 import RoonApiStatus from 'node-roon-api-status';
 import RoonApiTransport from 'node-roon-api-transport';
 
+import { Server } from 'socket.io';
+
 let transport;
 let browseInstance;
 
 const app = express();
 const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: true,
+    methods: ['GET', 'POST'],
+  },
+});
+
+app.use(cors());
 
 const roon = new RoonApi({
   /* eslint-disable camelcase */
@@ -40,5 +53,13 @@ roon.init_services({
 });
 
 serviceStatus.set_status('All is good', false);
+
+io.on('connection', async (socket) => {
+  /* eslint-disable no-console */
+  console.log('server.js: io.on(): Connected: socket.id:', socket.id);
+  /* eslint-enable no-console */
+
+  socket.emit('connectionTest', 'connectionTest');
+});
 
 export { roon, server };
