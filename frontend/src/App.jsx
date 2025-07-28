@@ -5,25 +5,22 @@ function App() {
   const [browseData, setBrowseData] = useState(null);
 
   const socketRef = useRef(null);
+  const coreUrlRef = useRef(null);
 
   useEffect(() => {
     socketRef.current = io("http://192.168.2.102:4001");
     const socket = socketRef.current;
 
-    socket.on("connectionTest", (testData) => {
-      setBrowseData(JSON.parse(testData));
+    socket.on("coreUrl", (coreUrl) => {
+      console.log("coreUrl:", coreUrl);
+
+      coreUrlRef.current = coreUrl;
     });
   }, []);
 
-  if (browseData !== null) {
-    return (
-      <div>
-        <p>{browseData}</p>
-      </div>
-    );
-  }
+  console.log("coreUrlRef:", coreUrlRef);
 
-  return null;
+  return <div></div>;
 }
 
 export default App;

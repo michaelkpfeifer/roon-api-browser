@@ -1,17 +1,20 @@
 import http from 'http';
 
 import cors from 'cors';
-
+import dotenv from 'dotenv';
 import express from 'express';
 import RoonApi from 'node-roon-api';
 import RoonApiBrowse from 'node-roon-api-browse';
 import RoonApiStatus from 'node-roon-api-status';
 import RoonApiTransport from 'node-roon-api-transport';
-
 import { Server } from 'socket.io';
 
 let transport;
 let browseInstance;
+
+dotenv.config();
+
+const coreUrlConfigured = process.env.CORE_URL;
 
 const app = express();
 const server = http.createServer(app);
@@ -56,10 +59,22 @@ serviceStatus.set_status('All is good', false);
 
 io.on('connection', async (socket) => {
   /* eslint-disable no-console */
-  console.log('server.js: io.on(): Connected: socket.id:', socket.id);
+  console.log('server.js: io.on(): socket.id:', socket.id);
   /* eslint-enable no-console */
 
-  socket.emit('connectionTest', 'connectionTest');
+  let coreUrl;
+  if (coreUrlConfigured && coreUrlConfigured !== '') {
+    coreUrl = coreUrlConfigured;
+  } else {
+    const { host: coreAddress, port: corePort } = transport.core.moo.transport;
+    coreUrl = `http://${coreAddress}:${corePort}`;
+  }
+
+  /* eslint-disable no-console */
+  console.log('server.js: io.on(): coreUrl:', coreUrl);
+  /* eslint-enable no-console */
+
+  socket.emit('coreUrl', coreUrl);
 });
 
 export { roon, server };
