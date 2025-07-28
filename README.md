@@ -28,9 +28,11 @@ Before running the extension, make sure `roon-api-browser` is
 Extensions** panel.
 
 If the backend cannot automatically determine the URL of the Roon
-Core, add it manually in a `.env` file.  A typical `.env` file looks
-like:
+Core, add it manually in the `.env` file of the `backend` directory.
+A typical `.env` file looks like:
 
 ```env
 CORE_URL=http://192.168.2.103:9330
 ```
+
+Make sure you include the port number in the URL.
