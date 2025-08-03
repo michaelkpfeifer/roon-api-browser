@@ -9,6 +9,8 @@ import RoonApiStatus from 'node-roon-api-status';
 import RoonApiTransport from 'node-roon-api-transport';
 import { Server } from 'socket.io';
 
+import { browseAsync, loadAsync } from './browser.js';
+
 let transport;
 let browseInstance;
 
@@ -62,19 +64,34 @@ io.on('connection', async (socket) => {
   console.log('server.js: io.on(): socket.id:', socket.id);
   /* eslint-enable no-console */
 
-  let coreUrl;
-  if (coreUrlConfigured && coreUrlConfigured !== '') {
-    coreUrl = coreUrlConfigured;
-  } else {
-    const { host: coreAddress, port: corePort } = transport.core.moo.transport;
-    coreUrl = `http://${coreAddress}:${corePort}`;
-  }
+  socket.on('coreUrl', async () => {
+    let coreUrl;
+    if (coreUrlConfigured && coreUrlConfigured !== '') {
+      coreUrl = coreUrlConfigured;
+    } else {
+      const { host: coreAddress, port: corePort } =
+        transport.core.moo.transport;
+      coreUrl = `http://${coreAddress}:${corePort}`;
+    }
 
-  /* eslint-disable no-console */
-  console.log('server.js: io.on(): coreUrl:', coreUrl);
-  /* eslint-enable no-console */
+    socket.emit('coreUrl', coreUrl);
+  });
 
-  socket.emit('coreUrl', coreUrl);
+  socket.on('browseData', async (dataRef) => {
+    let browseOptions;
+    if (dataRef === undefined) {
+      browseOptions = { hierarchy: 'browse', pop_all: true, item_key: null };
+    } else {
+      browseOptions = { hierarchy: 'browse', item_key: dataRef.itemKey };
+    }
+
+    await browseAsync(browseInstance, browseOptions);
+    const browseData = await loadAsync(browseInstance, {
+      hierarchy: 'browse',
+    });
+
+    socket.emit('browseData', browseData);
+  });
 });
 
 export { roon, server };
