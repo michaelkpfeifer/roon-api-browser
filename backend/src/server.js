@@ -78,6 +78,10 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('browseData', async (dataRef) => {
+    /* eslint-disable no-console */
+    console.log('server.js: socket.on(): dataRef:', dataRef);
+    /* eslint-enable no-console */
+
     let browseOptions;
     if (dataRef === undefined) {
       browseOptions = { hierarchy: 'browse', pop_all: true, item_key: null };

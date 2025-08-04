@@ -56,7 +56,7 @@ const renderItem = ({ item, coreUrl, socketRef }) => (
         rel="noopener noreferrer"
         onClick={(e) => {
           e.preventDefault();
-          socketRef.current.emit("browse", { itemKey: item.item_key });
+          socketRef.current.emit("browseData", { itemKey: item.item_key });
         }}
       >
         {item.title}
