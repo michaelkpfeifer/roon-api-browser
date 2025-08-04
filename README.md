@@ -5,8 +5,8 @@ Use the Roon API to browse your Roon Core.
 ## Overview
 
 This package provides a convenience wrapper around Roon's `browse`
-API. And it can schedule tracks to be played by the Roon core. It also
-helps clarify what the Roon API can and cannot do.
+API. So far, it only shows items. It cannot schedule any albums or
+tracks.
 
 ## Setup
 
