@@ -107,7 +107,9 @@ const renderItems = ({ items, coreUrl, socketRef }) => (
 );
 
 function App() {
-  const [browseData, setBrowseData] = useState(null);
+  const [appState, setAppState] = useState({
+    browseData: null,
+  });
 
   const socketRef = useRef(null);
   const coreUrlRef = useRef(null);
@@ -129,7 +131,10 @@ function App() {
       console.log("App.jsx: sockent.on(): browseData:", browseData);
       /* eslint-enable no-console */
 
-      setBrowseData(browseData);
+      setAppState((currentAppState) => ({
+        ...currentAppState,
+        browseData,
+      }));
     });
   }, []);
 
@@ -144,11 +149,11 @@ function App() {
     socket.emit("browseData");
   }, []);
 
-  if (browseData === null) {
+  if (appState.browseData === null) {
     return null;
   }
 
-  const { items, list } = browseData;
+  const { items, list } = appState.browseData;
   return (
     <div>
       <h1>Browse Roon Core</h1>
